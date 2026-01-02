@@ -1,4 +1,7 @@
 ﻿using EnergyMixApi.Models;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("EnergyMixApi.Tests")]
 
 namespace EnergyMixApi.Services
 {
@@ -96,7 +99,7 @@ namespace EnergyMixApi.Services
         /// </summary>
         /// <param name="fuelName">Name of the fuel to check</param>
         /// <returns>True if fuel is clean energy source, otherwise false</returns>
-        private bool IsCleanEnergy(string fuelName)
+        internal bool IsCleanEnergy(string fuelName)
         {
             var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
 
@@ -108,7 +111,7 @@ namespace EnergyMixApi.Services
         /// </summary>
         /// <param name="day">Generation data for one day (48 intervals)</param>
         /// <returns>Dictionary with fuel names and their average percentage</returns>
-        private Dictionary<string, double> CalculateAverageSourcesForDay(IGrouping<DateTime, GenerationData> day)
+        internal Dictionary<string, double> CalculateAverageSourcesForDay(IGrouping<DateTime, GenerationData> day)
         {
             var energySource = day
                 .SelectMany(interval => interval.GenerationMix)
@@ -135,7 +138,7 @@ namespace EnergyMixApi.Services
         /// </summary>
         /// <param name="sources">Dictionary od energy sources with percentages</param>
         /// <returns>Sum of clean energy percentages</returns>
-        private double CalculateCleanEnergyPercent(Dictionary<string, double> sources)
+        internal double CalculateCleanEnergyPercent(Dictionary<string, double> sources)
         {
             var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
 
