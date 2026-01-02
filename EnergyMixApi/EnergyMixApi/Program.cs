@@ -6,6 +6,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<ICarbonIntensityService, CarbonIntensityService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -14,14 +24,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/getenergymixinfo", async (ICarbonIntensityService service) =>
+app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
+
+app.MapGet("/api/energy-mix", async (ICarbonIntensityService service) =>
 {
     var result = await service.GetEnergyMixInfo();
 
     return Results.Ok(result);
 });
 
-app.MapGet("/getoptimalwindow", async (int hours, ICarbonIntensityService service) =>
+app.MapGet("/api/optimal-window", async (int hours, ICarbonIntensityService service) =>
 {
     if (hours < 1 || hours > 6)
     {
@@ -32,7 +45,5 @@ app.MapGet("/getoptimalwindow", async (int hours, ICarbonIntensityService servic
 
     return Results.Ok(result);
 });
-
-app.UseHttpsRedirection();
 
 app.Run();
