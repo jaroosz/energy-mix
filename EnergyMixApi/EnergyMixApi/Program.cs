@@ -28,9 +28,16 @@ app.UseHttpsRedirection();
 
 app.MapGet("/api/energy-mix", async (ICarbonIntensityService service) =>
 {
-    var result = await service.GetEnergyMixInfo();
+    try
+    {
+        var result = await service.GetEnergyMixInfo();
 
-    return Results.Ok(result);
+        return Results.Ok(result);
+    }
+    catch (HttpRequestException ex)
+    {
+        return Results.Problem("Failed to fetch data from external API");
+    }
 });
 
 app.MapGet("/api/optimal-window", async (int hours, ICarbonIntensityService service) =>
@@ -40,9 +47,16 @@ app.MapGet("/api/optimal-window", async (int hours, ICarbonIntensityService serv
         return Results.BadRequest("Hours parameter must be between 1 and 6.");
     }
 
-    var result = await service.GetOptimalWindow(hours);
+    try
+    {
+        var result = await service.GetOptimalWindow(hours);
 
-    return Results.Ok(result);
+        return Results.Ok(result);
+    }
+    catch (HttpRequestException ex)
+    {
+        return Results.Problem("Failed to fetch data from external API");
+    }
 });
 
 app.Run();
