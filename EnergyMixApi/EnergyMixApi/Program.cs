@@ -18,14 +18,19 @@ app.MapGet("/getenergymixinfo", async (ICarbonIntensityService service) =>
 {
     var result = await service.GetEnergyMixInfo();
 
-    return result;
+    return Results.Ok(result);
 });
 
 app.MapGet("/getoptimalwindow", async (int hours, ICarbonIntensityService service) =>
 {
+    if (hours < 1 || hours > 6)
+    {
+        return Results.BadRequest("Hours parameter must be between 1 and 6.");
+    }
+
     var result = await service.GetOptimalWindow(hours);
 
-    return result;
+    return Results.Ok(result);
 });
 
 app.UseHttpsRedirection();

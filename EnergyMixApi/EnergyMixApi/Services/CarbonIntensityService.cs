@@ -71,7 +71,57 @@ namespace EnergyMixApi.Services
 
         public async Task<OptimalWindowResponse> GetOptimalWindow(int hours)
         {
-            throw new NotImplementedException();
+            var today = DateTime.UtcNow.Date;
+            var from = today.AddDays(1);
+            var to = today.AddDays(3);
+
+            var data = await FetchGenerationData(from, to);
+
+            var intervals = data.Data;
+            var windowSize = hours * 2; // Each hour contain 2 intervals (30-minute intervals)
+
+            double bestAverage = 0;
+            int bestStartIndex = 0;
+
+            // Find the window with highest clean energy percentage using sliding window technique
+            for (int i = 0; i <= intervals.Count - windowSize; i++)
+            {
+                var window = intervals.Skip(i).Take(windowSize);
+
+                var averageClean = window
+                    .Select(interval => interval.GenerationMix
+                        .Where(fuel => IsCleanEnergy(fuel.Fuel))
+                        .Sum(fuel => fuel.Perc)
+                    )
+                    .Average();
+
+                if (averageClean > bestAverage)
+                {
+                    bestAverage = averageClean;
+                    bestStartIndex = i;
+                }
+            }
+
+            var bestWindow = intervals.Skip(bestStartIndex).Take(windowSize).ToList();
+
+            return new OptimalWindowResponse
+            {
+                StartTime = bestWindow.First().From,
+                EndTime = bestWindow.Last().To,
+                CleanEnergyPercent = bestAverage
+            };
+        }
+
+        /// <summary>
+        /// Compare fuel name with list of clean energy sources
+        /// </summary>
+        /// <param name="fuelName">Name of the fuel to check</param>
+        /// <returns>True if fuel is clean energy source, otherwise false</returns>
+        private bool IsCleanEnergy(string fuelName)
+        {
+            var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
+
+            return cleanSources.Contains(fuelName);
         }
 
         /// <summary>
