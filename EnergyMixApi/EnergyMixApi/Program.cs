@@ -10,9 +10,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
-        .AllowAnyMethod()
-        .AllowAnyHeader();
+        policy.AllowAnyHeader()
+            .AllowAnyMethod().WithOrigins("http://localhost:3000");
     });
 });
 
@@ -24,8 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
+app.UseHttpsRedirection();
 
 app.MapGet("/api/energy-mix", async (ICarbonIntensityService service) =>
 {
