@@ -27,31 +27,11 @@ namespace EnergyMixApi.Services
 
             var dailyDataList = new List<DailyEnergyData>();
 
+            // Calculate average and clean energy percentage for each day
             foreach (var day in groupedByDay)
             {
-                var energySource = day
-                    .SelectMany(interval => interval.GenerationMix)
-                    .Select(fuel => fuel.Fuel)
-                    .Distinct();
-
-                var sources = new Dictionary<string, double>();
-
-                foreach (var fuelName in energySource)
-                {
-                    var average = day
-                        .SelectMany(interval => interval.GenerationMix)
-                        .Where(fuel => fuel.Fuel == fuelName)
-                        .Average(fuel => fuel.Perc);
-
-                    sources.Add(fuelName, average);
-                }
-
-                var cleanEnergyPercent =
-                    sources["biomass"] +
-                    sources["nuclear"] +
-                    sources["hydro"] +
-                    sources["wind"] +
-                    sources["solar"];
+                var sources = CalculateAverageSourcesForDay(day);
+                var cleanEnergyPercent = CalculateCleanEnergyPercent(sources);
 
                 var dailyEnergyData = new DailyEnergyData
                 {
@@ -71,19 +51,18 @@ namespace EnergyMixApi.Services
 
         public async Task<OptimalWindowResponse> GetOptimalWindow(int hours)
         {
-            var today = DateTime.UtcNow.Date;
-            var from = today.AddDays(1);
-            var to = today.AddDays(3);
+            var from = DateTime.UtcNow.Date.AddDays(1);
+            var to = from.AddDays(2);
 
             var data = await FetchGenerationData(from, to);
 
             var intervals = data.Data;
             var windowSize = hours * 2; // Each hour contain 2 intervals (30-minute intervals)
 
+            // Find the window with highest clean energy percentage using sliding window technique
             double bestAverage = 0;
             int bestStartIndex = 0;
 
-            // Find the window with highest clean energy percentage using sliding window technique
             for (int i = 0; i <= intervals.Count - windowSize; i++)
             {
                 var window = intervals.Skip(i).Take(windowSize);
@@ -122,6 +101,47 @@ namespace EnergyMixApi.Services
             var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
 
             return cleanSources.Contains(fuelName);
+        }
+
+        /// <summary>
+        /// Calculates average percentage contribution of each energy source for a given day
+        /// </summary>
+        /// <param name="day">Generation data for one day (48 intervals)</param>
+        /// <returns>Dictionary with fuel names and their average percentage</returns>
+        private Dictionary<string, double> CalculateAverageSourcesForDay(IGrouping<DateTime, GenerationData> day)
+        {
+            var energySource = day
+                .SelectMany(interval => interval.GenerationMix)
+                .Select(fuel => fuel.Fuel)
+                .Distinct();
+
+            var sources = new Dictionary<string, double>();
+
+            foreach (var fuelName in energySource)
+            {
+                var average = day
+                    .SelectMany(interval => interval.GenerationMix)
+                    .Where(fuel => fuel.Fuel == fuelName)
+                    .Average(fuel => fuel.Perc);
+
+                sources.Add(fuelName, average);
+            }
+
+            return sources;
+        }
+
+        /// <summary>
+        /// Calculates total percentage of clean energy sources
+        /// </summary>
+        /// <param name="sources">Dictionary od energy sources with percentages</param>
+        /// <returns>Sum of clean energy percentages</returns>
+        private double CalculateCleanEnergyPercent(Dictionary<string, double> sources)
+        {
+            var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
+
+            return cleanSources
+                .Where(name => sources.ContainsKey(name))
+                .Sum(name => sources[name]);
         }
 
         /// <summary>
