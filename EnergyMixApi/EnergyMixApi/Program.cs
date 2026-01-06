@@ -11,7 +11,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", policy =>
     {
         policy.AllowAnyHeader()
-            .AllowAnyMethod().WithOrigins("http://localhost:3000");
+              .AllowAnyMethod()
+              .WithOrigins("https://energy-mix-frontend-53hj.onrender.com", "http://localhost:3000");
     });
 });
 
