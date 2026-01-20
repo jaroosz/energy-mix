@@ -11,7 +11,8 @@ This API fetches real-time energy generation data from UK Carbon Intensity API, 
 ## Build With
 
 - ASP.NET Core 8.0 - Minimal API
-- xUnit - Unit testing
+- xUnit - Unit testing for backend logic
+- Selenium WebDriver - Automated E2E UI testing (MS Edge)
 
 ## API Endpoints
 
