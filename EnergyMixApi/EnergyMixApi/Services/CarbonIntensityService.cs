@@ -113,24 +113,13 @@ namespace EnergyMixApi.Services
         /// <returns>Dictionary with fuel names and their average percentage</returns>
         internal Dictionary<string, double> CalculateAverageSourcesForDay(IGrouping<DateTime, GenerationData> day)
         {
-            var energySource = day
+            return day
                 .SelectMany(interval => interval.GenerationMix)
-                .Select(fuel => fuel.Fuel)
-                .Distinct();
-
-            var sources = new Dictionary<string, double>();
-
-            foreach (var fuelName in energySource)
-            {
-                var average = day
-                    .SelectMany(interval => interval.GenerationMix)
-                    .Where(fuel => fuel.Fuel == fuelName)
-                    .Average(fuel => fuel.Perc);
-
-                sources.Add(fuelName, average);
-            }
-
-            return sources;
+                .GroupBy(fuel => fuel.Fuel)
+                .ToDictionary(
+                    group => group.Key, 
+                    group => group.Average(x => x.Perc)
+                );
         }
 
         /// <summary>
