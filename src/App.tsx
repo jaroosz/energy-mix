@@ -44,9 +44,9 @@ function App() {
         </div>
       </header>
 
-      <div className="main-content-container">
+      <main className="main-content-container">
         {/* Energy Mix Section - displays 3 day cards with pie charts */}
-        <section className="energy-mix-section">
+        <section className="energy-mix-section" aria-labelledby="energy-mix-heading">
           {energyLoading && (
             <div className="loading-banner">
               <p>Loading data...</p>
@@ -54,7 +54,7 @@ function App() {
           )}
 
           {energyError && (
-            <button onClick={refetch} className="loading-banner error">
+            <button type="button" onClick={refetch} className="loading-banner error">
               <p>{energyError}</p>
               <p className="retry-text">Click to retry</p>
             </button>
@@ -81,9 +81,9 @@ function App() {
             ) : null}
           </div>
 
-          <div className="carousel-dots">
+          <div className="carousel-dots" aria-hidden="true">
             {[0, 1, 2].map((i) => (
-              <span key={i} className={`dot ${i === activeIndex ? 'active' : ''}`} />
+              <span key={i} className={"dot " + (i === activeIndex ? "active" : "")} />
             ))}
           </div>
         </section>
@@ -99,7 +99,7 @@ function App() {
             onFind={handleFindOptimalWindow}
           />
         </section>
-      </div>
+      </main>
 
       <footer className="footer">
         <p>© 2026 Dawid Jarosz | Codibly IT Academy Recruitment Task</p>

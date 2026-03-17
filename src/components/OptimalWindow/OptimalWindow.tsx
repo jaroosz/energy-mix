@@ -61,10 +61,11 @@ export const OptimalWindowCard: React.FC<OptimalWindowCardProps> = ({
             <div className='selector-container'>
                 {/* Window duration slider with dynamic gradient fill */}
                 <div className='duration-selector'>
-                    <label>
+                    <label htmlFor="charging-duration-slider">
                         Select Charging Duration: <span className='duration-value'>{chargingDuration} Hours</span>
                     </label>
                     <input
+                        id="charging-duration-slider"
                         type='range'
                         min='1'
                         max='6'
