@@ -20,6 +20,10 @@ Prerequisites
 - Node.js 16+
 - Backend API running ([see backend repo](https://github.com/jaroosz/energy-mix-backend))
 
+  Note:
+  The API provides forecast for approximately 36-40 hours ahead.
+  The third day may have incomplete data, in which case averages are calculated from available intervals.
+
 ## Installation
 
 1. Clone the repository:
