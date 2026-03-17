@@ -2,6 +2,7 @@
 using EnergyMixApi.Services;
 using FluentAssertions;
 using EnergyMixApi.Models;
+using Moq;
 
 namespace EnergyMixApi.Tests
 {
@@ -11,7 +12,8 @@ namespace EnergyMixApi.Tests
         public void IsCleanEnergy_ShouldReturnTrue_forCleanSources()
         {
             // Arrange
-            var httpClient = new HttpClient();
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             var service = new CarbonIntensityService(httpClient);
 
             // Act
@@ -33,7 +35,8 @@ namespace EnergyMixApi.Tests
         public void IsCleanEnergy_ShouldReturnFalse_forNonCleanSources()
         {
             // Arrange
-            var httpClient = new HttpClient();
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             var service = new CarbonIntensityService(httpClient);
 
             // Act
@@ -53,7 +56,8 @@ namespace EnergyMixApi.Tests
         public void CalculateCleanEnergyPercent_ShouldSumCleanSources()
         {
             // Arrange
-            var httpClient = new HttpClient();
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             var service = new CarbonIntensityService(httpClient);
 
             var sources = new Dictionary<string, double>
@@ -80,7 +84,8 @@ namespace EnergyMixApi.Tests
         public void CalculateCleanEnergyPercent_ShouldReturnZero_WhenNoCleanSources()
         {
             // Arrange
-            var httpClient = new HttpClient();
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             var service = new CarbonIntensityService(httpClient);
 
             var sources = new Dictionary<string, double>
@@ -103,7 +108,8 @@ namespace EnergyMixApi.Tests
         public void CalculateAverageSourcesForDay_ShouldCalculateCorrectAverages()
         {
             // Arrange
-            var httpClient = new HttpClient();
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             var service = new CarbonIntensityService(httpClient);
 
             var data = new List<GenerationData>
