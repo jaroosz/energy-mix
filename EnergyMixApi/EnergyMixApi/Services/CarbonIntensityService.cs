@@ -1,4 +1,5 @@
 ﻿using EnergyMixApi.Models;
+using EnergyMixApi.Constants;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("EnergyMixApi.Tests")]
@@ -16,7 +17,7 @@ namespace EnergyMixApi.Services
         public CarbonIntensityService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://api.carbonintensity.org.uk");
+            _httpClient.BaseAddress = new Uri(ApiConstants.CarbonIntensityApiBaseUrl);
         }
 
         public async Task<EnergyMixResponse> GetEnergyMixInfo()
@@ -101,9 +102,7 @@ namespace EnergyMixApi.Services
         /// <returns>True if fuel is clean energy source, otherwise false</returns>
         internal bool IsCleanEnergy(string fuelName)
         {
-            var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
-
-            return cleanSources.Contains(fuelName);
+            return FuelTypes.CleanSources.Contains(fuelName);
         }
 
         /// <summary>
@@ -129,9 +128,7 @@ namespace EnergyMixApi.Services
         /// <returns>Sum of clean energy percentages</returns>
         internal double CalculateCleanEnergyPercent(Dictionary<string, double> sources)
         {
-            var cleanSources = new[] { "biomass", "hydro", "nuclear", "solar", "wind" };
-
-            return cleanSources
+            return FuelTypes.CleanSources
                 .Where(name => sources.ContainsKey(name))
                 .Sum(name => sources[name]);
         }
