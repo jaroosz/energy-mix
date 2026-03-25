@@ -5,6 +5,7 @@ Backend API for analyzing energy generation data and findong optimal EV charging
 ## Description
 
 This API fetches real-time energy generation data from UK Carbon Intensity API, which provides:
+
 - daily energy mix breakdown with all types of energy percentages
 - optimal charging hour recommendations for EV
 
@@ -21,6 +22,7 @@ This API fetches real-time energy generation data from UK Carbon Intensity API, 
 Returns energy mix for three consecutive days (today, tomorrow, day after tomorrow).
 
 Response:
+
 ```json
 {
   "days": [
@@ -48,9 +50,11 @@ Response:
 Returns optimal charging hours with the highest clean energy percentage for next two days.
 
 Parameters:
+
 - 'hours' (required): Charging duration in hours (1-6)
 
 Response (int hours = 3):
+
 ```json
 {
   "startTime": "2026-01-03T14:30:00Z",
@@ -62,22 +66,25 @@ Response (int hours = 3):
 ## Setup
 
 Prerequisites:
+
 - .NET 8.0 SDK or later
 
 Installation:
 
-1. Clone the repository:
+1. Navigate to the backend directory:
+
 ```bash
-git clone https://github.com/jaroosz/energy-mix-backend.git
-cd energy-mix-backend
+cd backend
 ```
 
 2. Run application:
+
 ```bash
 dotnet run --project EnergyMixApi
 ```
 
 3. Access Swagger UI:
+
 ```
 https://localhost:7250/swagger
 ```
@@ -93,6 +100,7 @@ The third day may have incomplete data, in which case averages are calculated fr
 ## CORS Configuration
 
 The API is configured to accept requests from:
+
 - `http://localhost:3000`
 
 ## Author

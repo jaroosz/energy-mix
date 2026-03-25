@@ -18,7 +18,7 @@ React application displaying energy production data and optimal EV charging wind
 Prerequisites
 
 - Node.js 16+
-- Backend API running ([see backend repo](https://github.com/jaroosz/energy-mix-backend))
+- The Backend API must be running (see instructions in the /backend folder).
 
   Note:
   The API provides forecast for approximately 36-40 hours ahead.
@@ -26,22 +26,9 @@ Prerequisites
 
 ## Installation
 
-1. Clone the repository:
-
 ```bash
-git clone https://github.com/jaroosz/energy-mix-frontend.git
-cd energy-mix-frontend
-```
-
-2. Install dependencies
-
-```bash
+cd frontend
 npm install
-```
-
-3. Start development server
-
-```bash
 npm start
 ```
 
@@ -59,12 +46,12 @@ REACT_APP_API_URL=https://your-backend-url.com/api
 
 ### Desktop View
 
-![Desktop](screenshots/desktop.png)
+![Desktop](docs/desktop.png)
 
 ### Mobile View
 
-![Mobile](screenshots/mobile_1.png)
-![Mobile](screenshots/mobile_2.png)
+![Mobile](docs/mobile_1.png)
+![Mobile](docs/mobile_2.png)
 
 ## Author
 
