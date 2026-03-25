@@ -5,10 +5,10 @@ ENV ASPNETCORE_URLS=http://+:10000
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["EnergyMixApi/EnergyMixApi/EnergyMixApi.csproj", "EnergyMixApi/EnergyMixApi/"]
-RUN dotnet restore "EnergyMixApi/EnergyMixApi/EnergyMixApi.csproj"
+COPY ["EnergyMixApi/EnergyMixApi.csproj", "EnergyMixApi/"]
+RUN dotnet restore "EnergyMixApi/EnergyMixApi.csproj"
 COPY . .
-WORKDIR "/src/EnergyMixApi/EnergyMixApi"
+WORKDIR "/src/EnergyMixApi"
 RUN dotnet build "EnergyMixApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
