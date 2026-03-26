@@ -4,8 +4,8 @@ A full-stack solution for visualizing UK energy production data and calculating 
 
 ## Live Demo
 
-[Live demo](https://energy-mix-frontend-53hj.onrender.com)
-The app is hosted on Render's free tier so it may take ~15 seconds to fetch data on first load.
+[Live Demo](https://energy-mix-frontend-53hj.onrender.com)
+> The app is hosted on Render's free tier so it may take ~15 seconds to fetch data on first load.
 
 ## Overview
 
